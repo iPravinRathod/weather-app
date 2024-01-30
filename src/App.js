@@ -1,55 +1,42 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import InputBox from "./components/InputBox";
+import MainWeatherBoard from "./components/MainWeatherBoard";
 
 function App() {
-  const [city, setCity] = useState("dubai");
-  const [getCity, setGetCity] = useState("");
+  const [getCity, setGetCity] = useState("dubai");
   const [weatherData, setWeatherData] = useState({});
-  const cityName = city;
-  const apiKey = "783543f64c5acd04eb7fe0ec61215cd7";
-  const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}`;
 
-  const getWeather = () => {
+  const getWeather = (city) => {
     setGetCity(city);
   };
 
   useEffect(() => {
-    city &&
-      fetch(apiUrl)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((weatherData) => {
-          console.log("weatherData: " + JSON.stringify(weatherData));
-          setWeatherData(weatherData);
-        })
-        .catch((error) => {
-          console.error("Error making API request:", error.message);
-        });
+    const cityName = getCity;
+    const apiKey = "783543f64c5acd04eb7fe0ec61215cd7";
+    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}`;
+
+    fetch(apiUrl)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((weatherData) => {
+        console.log("weatherData: " + JSON.stringify(weatherData));
+        setWeatherData(weatherData);
+      })
+      .catch((error) => {
+        console.error("Error making API request:", error.message);
+      });
   }, [getCity]);
 
-  function MainWeatherBoard({ data }) {
-    return (
-      <>
-        <h1>{data.cod}</h1>
-        <h1>{data.city.name}</h1>
-        {/* <p>Temperature: {data.list[0].temp}</p> */}
-      </>
-    );
-  }
 
   return (
     <div className="App">
       <h1>Weather App</h1>
-      <input
-        placeholder="Search City"
-        value={city}
-        onChange={(e) => setCity(e.target.value)}
-      />
-      <button onClick={() => getWeather()}>Search</button>
+      <InputBox getWeather={getWeather} />
       {weatherData && <MainWeatherBoard data={weatherData} />}
     </div>
   );
