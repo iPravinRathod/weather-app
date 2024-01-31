@@ -1,16 +1,23 @@
-import React from 'react'
+import React from "react";
+import { Typography } from "@mui/material";
 
 const MainWeatherBoard = ({ data }) => {
-    return (
-        <>
-            <h1>{data.message}</h1>
-            <h1>{data.cnt}</h1>
-            <h1>{data.cod}</h1>
-            <h1>{data.city.name}</h1>
-            {/* <h1>{data.city.name}</h1>
-            <p>Temperature: {data.list[0].temp}</p> */}
-        </>
-    );
-}
+  console.log("data: " + JSON.stringify(data.list[0]));
+  return (
+    <>
+      <Typography variant="body1">Today</Typography>
+      <Typography variant="h2">{data.city.name}</Typography>
+      <Typography color="primary" variant="subtitle1">
+        Temperature: {data.list[0].main.temp}
+      </Typography>
+      <Typography color="primary" variant="subtitle1">
+        Feels like: {data.list[0].main.feels_like}
+      </Typography>
+      <Typography color="primary" variant="subtitle1">
+        {data.list[0].weather[0].description}
+      </Typography>
+    </>
+  );
+};
 
-export default MainWeatherBoard
+export default MainWeatherBoard;
